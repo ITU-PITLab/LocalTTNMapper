@@ -25,18 +25,14 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-
     themsg = json.loads(str(msg.payload))
-    #print(themsg)
-
-    #print(len(themsg['metadata']['gateways']))
 
     payload_raw = themsg["payload_raw"]
     payload_plain = base64.b64decode(payload_raw)
     device = themsg["dev_id"]
-    #print(device) 
-    lat = themsg["payload_fields"]["lat"]
-    lon = themsg["payload_fields"]["lon"]
+    print(device + " with " + str(len(themsg['metadata']['gateways'])) + " gateways") 
+    lat = themsg["payload_fields"]["latitude"]
+    lon = themsg["payload_fields"]["longitude"]
 
     freq = themsg["metadata"]["frequency"]
     rssi = themsg['metadata']['gateways'][0]['rssi']
@@ -45,16 +41,12 @@ def on_message(client, userdata, msg):
     gtw = themsg['metadata']['gateways'][0]['gtw_id']
 
     if rssi < -110:
-       #print("Red")
       clr = 'red'
     elif -90 > rssi > -110:
-       #print("Yellow")
       clr = 'yellow'
     else:
-       #print("Green")    
       clr = 'green'
 
-    print(clr) 
     file = open("/var/www/html/coverage/js/nodes.js","a")
     file.write('var circle = L.circle([')
     file.write("%f," % lat)
@@ -63,7 +55,7 @@ def on_message(client, userdata, msg):
     file.write('color: \'%s\',' % clr)
     file.write('fillColor: \'%s\',' % clr)
     file.write('fillOpacity: 0.5,\n')
-    file.write('radius: 40 \n')
+    file.write('radius: 10 \n')
     file.write('}).addTo(mymap).bindPopup("Device: <b> %s </b>' % device)
     file.write('<br>Freq: %s' % themsg["metadata"]["frequency"])
     file.write('<br>DR: %s' % themsg['metadata']['data_rate'])
@@ -90,7 +82,7 @@ def on_message(client, userdata, msg):
 
  
 client = mqtt.Client()
-client.username_pw_set("coverage_mapping_XXX", password="ttn-account-v2.KQrXXBVBVX2pia39eFBUNpLMzXNNH1gZxFXsr2eNxY")
+client.username_pw_set("pitlab-ttn-mapper", password="ttn-account-v2.YSTvD8CNEciE-ncAQrUEfbOtniNT4meQWJTdMuS8vIU")
 
 client.on_connect = on_connect
 client.on_message = on_message
