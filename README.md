@@ -1,6 +1,11 @@
 LocalTTNMapper
 ===
+_This version is made to work with payload format of the [Adafruit Feather M0](https://github.com/NielsOerbaek/FeatherTTNMapper)_
 
+#### Changes:
+A few bugs have been fixed, and a markerCluster library is imported, but not used yet.
+
+===
 > Disclaimer: this system is not a substitute of TTNMapper! I suggest using it in addition to TTNMapper if you want to quickly produce a coverage map for a workshop/test/experiment.
 > Your TTN application should receive data from a GPS-enabled node in such a way that TTNMapper can map the data. 
 
