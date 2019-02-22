@@ -8,6 +8,7 @@ import json
 import sys
 import time
 import base64
+from datetime import datetime
 
 import paho.mqtt.client as mqtt
 
@@ -30,7 +31,9 @@ def on_message(client, userdata, msg):
     payload_raw = themsg["payload_raw"]
     payload_plain = base64.b64decode(payload_raw)
     device = themsg["dev_id"]
+    print(datetime.now())
     print(device + " with " + str(len(themsg['metadata']['gateways'])) + " gateways") 
+    print("")
     lat = themsg["payload_fields"]["latitude"]
     lon = themsg["payload_fields"]["longitude"]
 
@@ -62,13 +65,10 @@ def on_message(client, userdata, msg):
     file.write('<br><b>Gateway 1</b>: %s' % themsg['metadata']['gateways'][0]['gtw_id'])
     file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][0]['rssi'])
     file.write('<br>SNR: %s' % themsg['metadata']['gateways'][0]['snr'])
-    if len(themsg['metadata']['gateways']) == 1: 
-      file.write('");')
-    elif len(themsg['metadata']['gateways']) == 2:
+    if len(themsg['metadata']['gateways']) == 2:
       file.write('<br><b>Gateway 2</b>: %s' % themsg['metadata']['gateways'][1]['gtw_id'])
       file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][1]['rssi'])
       file.write('<br>SNR: %s' % themsg['metadata']['gateways'][1]['snr'])
-      file.write('");')
     elif len(themsg['metadata']['gateways']) == 3:
       file.write('<br><b>Gateway 2</b>: %s' % themsg['metadata']['gateways'][1]['gtw_id'])
       file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][1]['rssi'])
@@ -76,7 +76,7 @@ def on_message(client, userdata, msg):
       file.write('<br><b>Gateway 3</b>: %s' % themsg['metadata']['gateways'][2]['gtw_id'])
       file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][2]['rssi'])
       file.write('<br>SNR: %s' % themsg['metadata']['gateways'][2]['snr'])
-      file.write('");')
+    file.write('");')
     file.write("\n")       
     file.close()
 
