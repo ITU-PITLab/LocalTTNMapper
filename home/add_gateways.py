@@ -7,7 +7,7 @@
 import os
 
 filePath = '/var/www/html/coverage/js/gateways.js';
- 
+
 # As file at filePath is deleted now, so we should check if file exists or not not before deleting them
 if os.path.exists(filePath):
     os.remove(filePath)
@@ -23,17 +23,18 @@ for key in data:
     if 'description' in data[key].keys(): gateway_name=data[key]['description']
     else: gateway_name = "unknown"
     gtw_id=data[key]['id']
-    print(gtw_id)    
+    print(gtw_id)
     print(gateway_name)
-    lat = data[key]['location']['latitude']  
+    lat = data[key]['location']['latitude']
     lon = data[key]['location']['longitude']
-    alt = data[key]['location']['altitude'] 
+    alt = data[key]['location']['altitude']
     file = open("/var/www/html/coverage/js/gateways.js","a")
     file.write('markers.addLayer(L.marker([')
     file.write("%f," % lat)
     file.write("%f," % lon)
-    file.write("]));")
+    file.write("]).bindPopup(\"")
+    file.write("<b>%s</b> " % gtw_id)
+    file.write("<br>%s. " % gateway_name.encode("utf-8"))
+    file.write("<br>Antenna height: %i meters." % alt)
+    file.write("\"));\n")
     file.close()
-
-
-
