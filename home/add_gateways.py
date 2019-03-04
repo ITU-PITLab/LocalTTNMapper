@@ -13,7 +13,7 @@ if os.path.exists(filePath):
     os.remove(filePath)
 
 import urllib, json
-url = "https://www.thethingsnetwork.org/gateway-data/location?latitude=55.6599740&longitude=12.5912461&distance=20000"
+url = "https://www.thethingsnetwork.org/gateway-data/location?latitude=55.6599740&longitude=12.5912461&distance=2000000"
 response = urllib.urlopen(url)
 data = json.loads(response.read())
 #print data
@@ -29,15 +29,10 @@ for key in data:
     lon = data[key]['location']['longitude']
     alt = data[key]['location']['altitude'] 
     file = open("/var/www/html/coverage/js/gateways.js","a")
-    file.write('var marker = L.marker([')
+    file.write('markers.addLayer(L.marker([')
     file.write("%f," % lat)
     file.write("%f," % lon)
-    file.write("]).addTo(mymap).bindPopup(\"")
-    file.write("<b>%s</b> " % gtw_id)
-    file.write("<br>%s. " % gateway_name)
-    file.write("<br>Antenna height: %i meters." % alt)
-    file.write("\");\n") 
-    file.write("\n")
+    file.write("]));")
     file.close()
 
 
