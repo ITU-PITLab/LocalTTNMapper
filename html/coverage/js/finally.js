@@ -1,3 +1,8 @@
+mymap.addLayer(markers)
+
+circles = []
+lines = []
+
 for (let p of points) {
 	lat = p.payload_fields.latitude
 	lon = p.payload_fields.longitude
@@ -27,14 +32,14 @@ for (let p of points) {
 	})
 
 	L.circle([lat, lon], 
-		{stroke: false, fill: true ,fillColor: color, fillOpacity: opacity, radius: radius})
-		.addTo(mymap).
-		bindPopup("Device: <b>"+p.dev_id+"</b>"+
+		{stroke: false, fill: true ,fillColor: color, fillOpacity: opacity, radius: radius})	
+		.addTo(mymap).bindPopup("Device: <b>"+p.dev_id+"</b>"+
 		'<br>Freq: ' + p["metadata"]["frequency"] +
 		'<br>DR: ' + p['metadata']['data_rate'] +
-		gtwString);
+		gtwString)
 	
 	gtws.forEach((gtw) => {
 		L.polyline([[lat, lon],[gtw.latitude, gtw.longitude]], {color: "blue", weight: 1, opacity: 0.2}).addTo(mymap)
 	})
 }
+
