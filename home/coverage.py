@@ -34,49 +34,10 @@ def on_message(client, userdata, msg):
     print(datetime.now())
     print(device + " with " + str(len(themsg['metadata']['gateways'])) + " gateways") 
     print("")
-    lat = themsg["payload_fields"]["latitude"]
-    lon = themsg["payload_fields"]["longitude"]
-
-    freq = themsg["metadata"]["frequency"]
-    rssi = themsg['metadata']['gateways'][0]['rssi']
-    snr = themsg['metadata']['gateways'][0]['snr']
-    dr = themsg['metadata']['data_rate']
-    gtw = themsg['metadata']['gateways'][0]['gtw_id']
     
-    if True:
-        file = open("/var/www/html/coverage/js/nodes.js","a")
-        file.write('var circle = L.circle([')
-        file.write("%f," % lat)
-        file.write("%f" % lon)
-        file.write('], {\n') 
-        file.write('color: \'%s\',' % clr)
-        file.write('fillColor: \'%s\',' % clr)
-        file.write('fillOpacity: 0.5,\n')
-        file.write('radius: 10 \n')
-        file.write('}).addTo(mymap).bindPopup("Device: <b> %s </b>' % device)
-        file.write('<br>Freq: %s' % themsg["metadata"]["frequency"])
-        file.write('<br>DR: %s' % themsg['metadata']['data_rate'])
-        file.write('<br><b>Gateway 1</b>: %s' % themsg['metadata']['gateways'][0]['gtw_id'])
-        file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][0]['rssi'])
-        file.write('<br>SNR: %s' % themsg['metadata']['gateways'][0]['snr'])
-        if len(themsg['metadata']['gateways']) == 2:
-          file.write('<br><b>Gateway 2</b>: %s' % themsg['metadata']['gateways'][1]['gtw_id'])
-          file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][1]['rssi'])
-          file.write('<br>SNR: %s' % themsg['metadata']['gateways'][1]['snr'])
-        elif len(themsg['metadata']['gateways']) == 3:
-          file.write('<br><b>Gateway 2</b>: %s' % themsg['metadata']['gateways'][1]['gtw_id'])
-          file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][1]['rssi'])
-          file.write('<br>SNR: %s' % themsg['metadata']['gateways'][1]['snr'])
-          file.write('<br><b>Gateway 3</b>: %s' % themsg['metadata']['gateways'][2]['gtw_id'])
-          file.write('<br>RSSI: %s' % themsg['metadata']['gateways'][2]['rssi'])
-          file.write('<br>SNR: %s' % themsg['metadata']['gateways'][2]['snr'])
-        file.write('");')
-        file.write("\n")       
-        file.close()
-    else:
-        file = open("/var/www/html/coverage/js/nodes.js","a")
-        file.write('points.push('+str(msg.payload)+");")
-        file.close()
+    file = open("/var/www/html/coverage/js/nodes.js","a")
+    file.write('points.push('+str(msg.payload)+");")
+    file.close()
         
 
 client = mqtt.Client()
