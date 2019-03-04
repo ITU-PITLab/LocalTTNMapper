@@ -10,20 +10,20 @@ for (let p of points) {
 	rssi = p.metadata.gateways[0].rssi
 	if(rssi < -110) {
 		color = "red"
-		radius = 15
+		radius = 20
 		opacity = 0.2
 	}
 	else if(rssi < -90) {
 		color = "yellow"
-		radius = 10
+		radius = 15
 		opacity = 0.35
 	}
 	else {
 		color = "green"
-		radius = 6
+		radius = 10
 		opacity = 0.5
 	}
-	
+
 	gtws = p.metadata.gateways
 	gtwString = ""
 	gtws.forEach((gtw, i) => {
@@ -31,15 +31,35 @@ for (let p of points) {
 		'<br>RSSI: ' + gtw['rssi'] + '<br>SNR: ' + gtw['snr']
 	})
 
-	L.circle([lat, lon], 
-		{stroke: false, fill: true ,fillColor: color, fillOpacity: opacity, radius: radius})	
-		.addTo(mymap).bindPopup("Device: <b>"+p.dev_id+"</b>"+
+	circles.push(L.circle([lat, lon],
+		{stroke: false, fill: true ,fillColor: color, fillOpacity: opacity, radius: radius})
+		.bindPopup("Device: <b>"+p.dev_id+"</b>"+
 		'<br>Freq: ' + p["metadata"]["frequency"] +
 		'<br>DR: ' + p['metadata']['data_rate'] +
-		gtwString)
-	
+		gtwString))
+
 	gtws.forEach((gtw) => {
-		L.polyline([[lat, lon],[gtw.latitude, gtw.longitude]], {color: "blue", weight: 1, opacity: 0.2}).addTo(mymap)
+		lines.push(L.polyline([[lat, lon],[gtw.latitude, gtw.longitude]], {color: "blue", weight: 1, opacity: 0.2}))
 	})
 }
 
+//Add the lines and circles
+circleGroup = L.featureGroup(circles)
+lineGroup = L.featureGroup(lines)
+circleGroup.addTo(mymap)
+linesVisible = false
+
+function toggleLines() {
+  if(linesVisible) {
+    mymap.removeLayer(lineGroup)
+    markers.enableClustering()
+    document.getElementById("line-toggle").innerHTML = "<span>Show gateway connections</span>"
+    linesVisible = false
+  }
+  else {
+    mymap.addLayer(lineGroup)
+    markers.disableClustering()
+    document.getElementById("line-toggle").innerHTML = "<span>Hide gateway connections</span>"
+    linesVisible = true
+  }
+}
