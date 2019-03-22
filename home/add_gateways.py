@@ -7,34 +7,42 @@
 import os
 
 filePath = '/var/www/html/coverage/js/gateways.js';
-
+ 
 # As file at filePath is deleted now, so we should check if file exists or not not before deleting them
 if os.path.exists(filePath):
     os.remove(filePath)
 
 import urllib, json
-url = "https://www.thethingsnetwork.org/gateway-data/location?latitude=55.6599740&longitude=12.5912461&distance=2000000"
+url = "https://www.thethingsnetwork.org/gateway-data/location?latitude=-55.6643867&longitude=12.5627369&distance=20000"
 response = urllib.urlopen(url)
 data = json.loads(response.read())
 #print data
 print("The following Gateways are added to the coverage map:")
 
 for key in data:
-    if 'description' in data[key].keys(): gateway_name=data[key]['description']
-    else: gateway_name = "unknown"
+    #print key, 'corresponds to', data[key]
+    #print(data[key]['description'])
+    gateway_name=data[key]['description'] 
     gtw_id=data[key]['id']
-    print(gtw_id)
-    print(gateway_name)
-    lat = data[key]['location']['latitude']
+    print(data[key]['id'])    
+    print(data[key]['description'])
+     #print(data[key]['location']['latitude'])
+    lat = data[key]['location']['latitude']  
     lon = data[key]['location']['longitude']
-    alt = data[key]['location']['altitude']
+    alt = data[key]['location']['altitude'] 
+    #print(data[key]['location']['longitude'])
+    #print(data[key]['location']['altitude']) 
     file = open("/var/www/html/coverage/js/gateways.js","a")
-    file.write('markers.addLayer(L.marker([')
+    file.write('var marker = L.marker([')
     file.write("%f," % lat)
     file.write("%f," % lon)
-    file.write("]).bindPopup(\"")
+    file.write("]).addTo(mymap).bindPopup(\"")
     file.write("<b>%s</b> " % gtw_id)
-    file.write("<br>%s. " % gateway_name.encode("utf-8"))
+    file.write("<br>%s. " % gateway_name)
     file.write("<br>Antenna height: %i meters." % alt)
-    file.write("\"));\n")
+    file.write("\");\n") 
+    file.write("\n")
     file.close()
+
+
+
